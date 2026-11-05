@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pymichaelis"
+dynamic = ["version"]
+description = "Typed Python client for the phonetic transcriptions of Brazilian Portuguese in the Michaelis Dicionário Escolar"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+authors = [{ name = "JarbasAi", email = "jarbasai@mailfence.com" }]
+requires-python = ">=3.11"
+dependencies = ["requests>=2.28", "beautifulsoup4>=4.11"]
+keywords = ["michaelis", "portuguese", "brazilian", "dictionary", "pronunciation", "ipa", "scraper"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Intended Audience :: Developers",
+    "Topic :: Text Processing :: Linguistic",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+pymichaelis-crawl = "pymichaelis.crawl:main"
+
+[tool.setuptools.packages.find]
+include = ["pymichaelis*"]
+
+[tool.setuptools.dynamic]
+version = { attr = "pymichaelis.version.__version__" }
