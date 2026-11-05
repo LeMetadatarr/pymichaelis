@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from pymichaelis import FOUND, NO_ENTRY, Blocked, parse_entry, parse_suggestions
+from pymichaelis import FOUND, NO_ENTRY, NO_TRANSCRIPTION, Blocked, parse_entry, parse_suggestions
 
 FIXTURES = Path(__file__).parent / "fixtures"
 URL = "https://michaelis.uol.com.br/x/"
@@ -83,6 +83,17 @@ def test_a_page_with_one_headword_tag_holding_two_forms():
     assert entry.headword == "e, E"
     assert entry.homograph is None
     assert entry.raw == "[′e]"
+
+
+@pytest.mark.parametrize(
+    "name, headword, syllables",
+    [("agio", "ágio", "á.gio"), ("km", "km", "km")],
+)
+def test_a_page_without_a_transcription_is_recorded_as_such(name, headword, syllables):
+    entry = parse(name)
+    assert entry.status == NO_TRANSCRIPTION
+    assert (entry.headword, entry.syllables, entry.pos) == (headword, syllables, ("sm",))
+    assert entry.raw is None and entry.ipa is None
 
 
 def test_a_miss_is_recorded_and_carries_no_data():
