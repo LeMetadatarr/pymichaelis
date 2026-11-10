@@ -36,6 +36,10 @@ CLUSTERS = frozenset(
 )
 
 
+#: Vowels before which the letter ⟨c⟩ spells [s].
+FRONT = frozenset("eɛiĩẽj")
+
+
 class UnknownSymbol(ValueError):
     """The transcription holds a symbol that the notation key does not define."""
 
@@ -66,13 +70,25 @@ def _move_stress(text: str) -> str:
     return "".join(out)
 
 
+def _spelling_c(text: str) -> str:
+    """Read a ⟨c⟩ that an entry prints in place of a symbol by its spelling
+    value: [s] before a front vowel or [j], [k] elsewhere."""
+    out = []
+    for i, char in enumerate(text):
+        if char == "c":
+            following = text[i + 1:].lstrip(STRESS)[:1]
+            char = "s" if following in FRONT else "k"
+        out.append(char)
+    return "".join(out)
+
+
 def to_ipa(raw: str) -> str:
     """Return the IPA form of a raw ``<et>`` string such as ``[pes′oә]``.
 
     Raises:
         UnknownSymbol: ``raw`` holds a symbol outside the notation key.
     """
-    text = unicodedata.normalize("NFC", raw.strip()).strip("[]").strip()
+    text = _spelling_c(unicodedata.normalize("NFC", raw.strip()).strip("[]").strip())
     for symbol, ipa in SYMBOLS.items():
         text = text.replace(symbol, ipa)
     text = text.replace(STRESS, IPA_STRESS)
