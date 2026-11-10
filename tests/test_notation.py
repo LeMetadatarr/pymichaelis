@@ -75,6 +75,24 @@ def test_stress_moves_to_the_start_of_the_syllable(raw, ipa):
     assert to_ipa(raw) == ipa
 
 
+@pytest.mark.parametrize(
+    "raw, ipa",
+    [
+        ("[ãʒelic′aw]", "ãʒeliˈkaw"),
+        ("[awtocõtr′oli]", "awtokõˈtɾoli"),
+        ("[prɛcoz′er]", "pɾɛkoˈzeɾ"),
+        ("[t′ocu]", "ˈtoku"),
+        ("[ãtisoci′aw]", "ãtisosiˈaw"),
+        ("[awspici′ozu]", "awspisiˈozu"),
+        ("[az′uwcel′ɛsti]", "aˈzuwseˈlɛsti"),
+        ("[evolucjon′ismu]", "evolusjoˈnismu"),
+        ("[placid′es]", "plasiˈdes"),
+    ],
+)
+def test_a_printed_c_takes_its_spelling_value(raw, ipa):
+    assert to_ipa(raw) == ipa
+
+
 def test_a_symbol_outside_the_key_is_refused():
     with pytest.raises(UnknownSymbol):
         to_ipa("[kaθa]")
